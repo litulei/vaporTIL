@@ -7,7 +7,7 @@
 
 import Foundation
 import Vapor
-import FluentMySQL
+import FluentSQLite
 
 // All Fluent models must conform to Codable
 final class Acronym: Codable {
@@ -35,7 +35,7 @@ extension Acronym: Model {
 }
 ****/
 // above code can be improved further with SQLiteModel. replace:
-extension Acronym: MySQLModel {}
+extension Acronym: SQLiteModel {}
 // The SQLiteModel protocol must have an ID of type Int? call id, but
 // there are SQLiteUUIDModel and SQLiteStringModel protocols for models
 // with IDs of type UUID or string.
@@ -57,7 +57,7 @@ extension Acronym: MySQLModel {}
 // 1
 extension Acronym: Migration {
     // 2 override the default implementation
-    static func prepare(on connection: MySQLConnection) -> Future<Void> {
+    static func prepare(on connection: SQLiteConnection) -> Future<Void> {
         // 3 create the table for Acronym in the database
         return Database.create(self, on: connection) { builder in
             // 4

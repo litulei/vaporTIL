@@ -1,7 +1,7 @@
 
 import Foundation
 import Vapor
-import FluentMySQL
+import FluentSQLite
 import Authentication
 
 final class User: Codable {
@@ -30,10 +30,10 @@ final class User: Codable {
 }
 
 // Because the model's id property is a UUID
-extension User: MySQLUUIDModel {}
+extension User: SQLiteUUIDModel {}
 extension User: Content {}
 extension User: Migration {
-    static func prepare(on connection: MySQLConnection) -> Future<Void> {
+    static func prepare(on connection: SQLiteConnection) -> Future<Void> {
         // Create User table
         return Database.create(self, on: connection) { builder in
             try addProperties(to: builder)
@@ -82,8 +82,8 @@ extension User: TokenAuthenticatable {
 }
 
 struct AdminUser: Migration {
-    typealias Database = MySQLDatabase
-    static func prepare(on connnection: MySQLConnection) -> Future<Void> {
+    typealias Database = SQLiteDatabase
+    static func prepare(on connnection: SQLiteConnection) -> Future<Void> {
         let password = try? BCrypt.hash("password")
         guard let hashedPassword = password else {
             fatalError("Failed to create admin user")
@@ -92,7 +92,7 @@ struct AdminUser: Migration {
         return user.save(on: connnection).transform(to: ())
     }
     
-    static func revert(on connnection: MySQLConnection) -> Future<Void> {
+    static func revert(on connnection: SQLiteConnection) -> Future<Void> {
         return .done(on: connnection)
     }
 }

@@ -1,8 +1,8 @@
 
-import FluentMySQL
+import FluentSQLite
 import Foundation
 
-final class AcronymCategoryPivot: MySQLUUIDPivot {
+final class AcronymCategoryPivot: SQLiteUUIDPivot {
     var id: UUID?
     var acronymID: Acronym.ID
     var categoryID: Category.ID
@@ -20,7 +20,7 @@ final class AcronymCategoryPivot: MySQLUUIDPivot {
 }
 
 extension AcronymCategoryPivot: Migration {
-    static func prepare(on connection: MySQLConnection) -> Future<Void> {
+    static func prepare(on connection: SQLiteConnection) -> Future<Void> {
         // create the table for AcronymCategoryPivot and the id property on Acronym.
         
         return Database.create(self, on: connection) { builder in
